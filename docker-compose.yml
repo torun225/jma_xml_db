@@ -7,7 +7,6 @@ services:
     image: python:3.10-slim-add-install_jma-xml-apsv
     container_name: jma-xml-XmlFeedPrc
     hostname: jma-xml-XmlFeedPrc
-    tty: true
     volumes:
       - ./src:/app
     depends_on:
@@ -21,7 +20,6 @@ services:
     image: python:3.10-slim-add-install_jma-xml-apsv
     container_name: jma-xml-DownLoader
     hostname: jma-xml-DownLoader
-    tty: true
     volumes:
       - ./src:/app
     depends_on:
@@ -38,6 +36,12 @@ services:
     volumes:
       - ./mongodb_data:/data/db
       - ./configdb:/data/configdb
+    healthcheck:
+      test:  echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
 
   mongo-express:
     image: mongo-express
@@ -49,5 +53,5 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: password
       ME_CONFIG_MONGODB_SERVER: jma-xml-mongo
     depends_on:
-      - mongo
-    tty: true
+      mongo:
+        condition: service_healthy
