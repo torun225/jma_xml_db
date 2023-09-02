@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/python/Dockerfile
-    image: python:3.10-slim-add-install(jma-xml-apsv)
+    image: python:3.10-slim-add-install_jma-xml-apsv
     container_name: jma-xml-apsv
     hostname: jma-xml-apsv
     tty: true
@@ -32,5 +32,5 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: password
       ME_CONFIG_MONGODB_SERVER: jma-xml-mongo
     depends_on:
-      - jma-xml-mongo
+      - mongo
     tty: true
