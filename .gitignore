@@ -1,0 +1,4 @@
+mongodb_data
+src/log
+.cache
+__pycache__

@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters": {
+    "simple": {
+      "format": "%(asctime)s %(name)s:%(lineno)s %(funcName)s [%(levelname)s]: %(message)s"
+    }
+  },
+  "handlers": {
+    "consoleHandler": {
+      "class": "logging.StreamHandler",
+      "formatter": "simple",
+      "stream": "ext://sys.stdout"
+    },
+    "mainFileHandler": {
+      "class": "logging.FileHandler",
+      "formatter": "simple",
+      "filename": "./log/main_app.log"
+    },
+    "xmlFeedServerFileHandler": {
+      "class": "logging.FileHandler",
+      "formatter": "simple",
+      "filename": "./log/xmlFeed_app.log"
+    }
+  },
+  "loggers": {
+    "default": {
+      "level": "DEBUG",
+      "handlers": [
+        "consoleHandler",
+        "mainFileHandler"
+      ],
+      "propagate": false
+    },
+    "xmlFeed": {
+      "level": "DEBUG",
+      "handlers": [
+        "consoleHandler",
+        "xmlFeedServerFileHandler"
+      ],
+      "propagate": false
+    }
+  },
+  "root": {
+    "level": "INFO"
+  }
+}
