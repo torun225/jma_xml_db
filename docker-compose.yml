@@ -1,15 +1,32 @@
 version: '3'
 services:
-  server:
+  XmlFeedPrc:
     build:
       context: .
       dockerfile: ./docker/python/Dockerfile
     image: python:3.10-slim-add-install_jma-xml-apsv
-    container_name: jma-xml-apsv
-    hostname: jma-xml-apsv
+    container_name: jma-xml-XmlFeedPrc
+    hostname: jma-xml-XmlFeedPrc
     tty: true
     volumes:
-      - ./src:/root
+      - ./src:/app
+    depends_on:
+      - mongo
+    command: /bin/sh -c "python3 XmlFeedPrc.py"
+
+  DownLoader:
+    build:
+      context: .
+      dockerfile: ./docker/python/Dockerfile
+    image: python:3.10-slim-add-install_jma-xml-apsv
+    container_name: jma-xml-DownLoader
+    hostname: jma-xml-DownLoader
+    tty: true
+    volumes:
+      - ./src:/app
+    depends_on:
+      - mongo
+    command: /bin/sh -c "python3 DownLoader.py"
 
   mongo:
     image: mongo
