@@ -1,15 +1,30 @@
 version: '3'
 services:
-  server:
+  XmlFeedPrc:
     build:
       context: .
       dockerfile: ./docker/python/Dockerfile
     image: python:3.10-slim-add-install_jma-xml-apsv
-    container_name: jma-xml-apsv
-    hostname: jma-xml-apsv
-    tty: true
+    container_name: jma-xml-XmlFeedPrc
+    hostname: jma-xml-XmlFeedPrc
     volumes:
-      - ./src:/root
+      - ./src:/app
+    depends_on:
+      - mongo
+    command: /bin/sh -c "python3 XmlFeedPrc.py"
+
+  DownLoader:
+    build:
+      context: .
+      dockerfile: ./docker/python/Dockerfile
+    image: python:3.10-slim-add-install_jma-xml-apsv
+    container_name: jma-xml-DownLoader
+    hostname: jma-xml-DownLoader
+    volumes:
+      - ./src:/app
+    depends_on:
+      - mongo
+    command: /bin/sh -c "python3 DownLoader.py"
 
   mongo:
     image: mongo
@@ -21,6 +36,12 @@ services:
     volumes:
       - ./mongodb_data:/data/db
       - ./configdb:/data/configdb
+    healthcheck:
+      test:  echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
 
   mongo-express:
     image: mongo-express
@@ -32,5 +53,5 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: password
       ME_CONFIG_MONGODB_SERVER: jma-xml-mongo
     depends_on:
-      - mongo
-    tty: true
+      mongo:
+        condition: service_healthy
